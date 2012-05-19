@@ -51,7 +51,7 @@ Your AppController.php might start something like this:
 		
 ### 4. Set write permissions ###
 
-Ensure that the directories holding your Javascript and CSS files are writable.
+Ensure that the directories holding your Javascript and CSS files are writable, so the combinator plugin can write cached files.
 
 ### 5. Start Combining your CSS and Javascript files! ###
 
