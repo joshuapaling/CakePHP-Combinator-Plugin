@@ -1,69 +1,39 @@
-CakePHP Blog Plugin
-===================
+CakePHP Combinator Plugin
+=========================
 
-A CakePHP blog plugin for CakePHP2.0+
+A CakePHP Combinator plugin for CakePHP 2.1 - combine, minify and cache Javascript and CSS files for faster load times.
+
+This plugin basically takes the [2010 Combinator Article from the Bakery](http://bakery.cakephp.org/articles/st3ph/2010/09/10/combinator-compress-and-combine-your-js-and-css-files), makes it compatible with CakePHP 2.1, and packages it as a plugin, including CSSTidy and jsmin.
+
+Please Note - this is my first CakePHP plugin, and also my first public GitHub project. As far as I know the code included is all legit and open source. Let me know if not.
 
 Features
 --------
 
-* Blog posts
-** Paginated across all filter types (see below)
-** Sticky flag
-** In/out RSS feed flag
-* Filter by
-** Categories (HABTM, hierarchy, only shows categories with posts in, displays number of posts in each category or one of its children)
-** Tags (HABTM, including tag cloud)
-** Year/month archive (based on created date/time, only shows months with posts in, grouped by year, displays number of posts in each month)
-* RSS for all posts, or posts in a particular category or tag
-* Settings
-** Meta title, description, keywords for the unfiltered list and filtered by archive list
+* Combine Multiple CSS files into one
+* Combine Multiple Javascript files int one
+* Minify CSS and Javascript files
 
-Customisations
---------------
-
-Create custom views in your app directory e.g. app/views/plugins/blog/blog_posts/index.ctp
 
 Requirements
 ------------
 
-* CakePHP 2.0+ (so PHP5.2+)
-* MySQL v4+
-* CakePHP HABTM Counter Cache behavior (http://github.com/neilcrookes/CakePHP-HABTM-Counter-Cache-Plugin)
+* CakePHP 2.1+
+
 
 Installation
 ------------
 
-    git submodule add git://github.com/neilcrookes/CakePHP-Blog-Plugin.git app/Plugin/Blog
+    git submodule add git@github.com:joshuapaling/CakePHP-Combinator-Plugin.git app/Plugin/Combinator
 
-or download from http://github.com/neilcrookes/CakePHP-Blog-Plugin
+or download from https://github.com/joshuapaling/CakePHP-Combinator-Plugin
 
-    // APP/Config/Routes.php
-    include APP.'Plugin'.DS.'Blog'.DS.'Config'.DS.'routes.php';
 
-Run the SQL script in Blog/Config/chema/schema.sql
-
-Go to mydomain.com/blog
-
-See:
-
-* mydomain.com/admin/blog_posts for creating blog posts (and follow links to create the tags and categories first)
-* mydomain.com/admin/blog_settings for editing the settings (things like the index page title and RSS feed title etc)
-
-(Requires your Routing.prefixes is includes 'admin')
-
-Todo
-----
-
-* Custom blog post content implementations
-* Internationalisation
-* Improve the admin interface
-
-All contributions welcome and will be attributed
 
 Copyright
 ---------
 
-Copyright Neil Crookes 2011
+Copyright Joshua Paling 2012
 
 License
 -------
