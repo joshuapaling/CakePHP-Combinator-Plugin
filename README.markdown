@@ -1,41 +1,91 @@
-CakePHP Combinator Plugin
-=========================
+# CakePHP Combinator Plugin #
 
-A CakePHP Combinator plugin for CakePHP 2.1 - combine, minify and cache Javascript and CSS files for faster load times.
+A Combinator plugin for CakePHP 2.1 - combine, minify and cache Javascript and CSS files for faster load times.
 
-This plugin basically takes the [2010 Combinator Article from the Bakery](http://bakery.cakephp.org/articles/st3ph/2010/09/10/combinator-compress-and-combine-your-js-and-css-files), makes it compatible with CakePHP 2.1, and packages it as a plugin, including CSSTidy and jsmin.
+## Introduction ##
 
-Please Note - this is my first CakePHP plugin, and also my first public GitHub project. As far as I know the code included is all legit and open source. Let me know if not.
 
-Features
---------
+This plugin basically takes the [Cake 1.3 Combinator Article from the Bakery](http://bakery.cakephp.org/articles/st3ph/2010/09/10/combinator-compress-and-combine-your-js-and-css-files), makes it compatible with CakePHP 2.1, and packages it as a plugin, including CSSTidy and jsmin.
+
+Please Note - this is my first CakePHP plugin, and also my first public GitHub project. As far as I know the code included is all legit and open source. Please let me know if not.
+
+## Features ##
 
 * Combine Multiple CSS files into one
-* Combine Multiple Javascript files int one
+* Combine Multiple Javascript files into one
 * Minify CSS and Javascript files
+* Select level of compression for CSS and Javascript files
 
-
-Requirements
-------------
+## Requirements ##
 
 * CakePHP 2.1+
 
+## Installation ##
 
-Installation
-------------
+### 1. Copy the plugin into your app/Plugin/Combinator directory ###
 
     git submodule add git@github.com:joshuapaling/CakePHP-Combinator-Plugin.git app/Plugin/Combinator
 
 or download from https://github.com/joshuapaling/CakePHP-Combinator-Plugin
+	
+### 2. Load the Plugin ###
+
+In app/Config/bootstrap.php, at the bottom, add a line to load the plugin - either:
+	
+	CakePlugin::load('Combinator'); // Loads only the combinator plugin
+
+or
+	
+	CakePlugin::loadAll(); // Loads all plugins at once
+	
+### 3. Add the Combinator to your Helpers array ###
+
+Add 'Combinator.Combinator' to your Helpers array in app/Controller/AppController.php (the first 'Combinator' refers to the name of the plugin, the second to the name of the helper itself - they both have the same name)
+	
+Your AppController.php might start something like this:
+	
+	class AppController extends Controller {
+		var $helpers = array('Cache','Html','Session','Form','Combinator.Combinator');
+		
+### 4. Set write permissions ###
+
+Ensure that the directories holding your Javascript and CSS are writable
+
+### 5. Start Combining your CSS and Javascript files! ###
+
+A minimal use might look something like this:
+
+	$this->Combinator->add_libs('js', array('main','jquery.bxSlider.min','jquery.easing.1.3','jquery.cookie')); // include all your javascript files
+	$this->Combinator->add_libs('css', array('default','contact','blog','shop')); // include all your CSS files
+	
+	echo $this->Combinator->scripts('js'); // Output Javascript files
+	echo $this->Combinator->scripts('css'); // Output CSS files
+	
+However, I like to set it up as follows, so that my CSS and Javascript files are only minified and cached when I'm not in debug mode:
+
+	$cssFiles = array('default','contact','blog','shop');
+	$jsFiles = array('main','jquery.bxSlider.min','jquery.easing.1.3','jquery.backgroundpos.min','jquery.cookie','jquery.form','stickyScroll');
+
+	if(Configure::read('debug') == 2){ 
+		// Don't compress/cache css/js when we are in debug mode
+		echo $this->Html->css($cssFiles);
+		echo $this->Html->script($jsFiles);
+	} else {
+		$this->Combinator->add_libs('js', $jsFiles);
+		$this->Combinator->add_libs('css', $cssFiles);
+		echo $this->Combinator->scripts('js');
+		echo $this->Combinator->scripts('css');
+	}
+	
+## Tricks, Tips and Issues ##
+
+(These are copied from the [Cake 1.3 Combinator Article from the Bakery](http://bakery.cakephp.org/articles/st3ph/2010/09/10/combinator-compress-and-combine-your-js-and-css-files))
+*By default the files are compressed, you can change that by setting via the options of the helper.
+*By default the cached files are written to /app/webroot/js and /app/webroot/css. You can change that by setting via the options of the helper. The helper removes the / at the beginning and the end of the path specified.
+*If you get a JavaScript error with a packed version of a file it's most likely missing a semi-colon somewhere.
+*CSSTIDY seems to cause some bugs with css3 (I tried with background gradient)
 
 
-
-Copyright
----------
-
-Copyright Joshua Paling 2012
-
-License
--------
+## License ##
 
 The MIT License
