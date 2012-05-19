@@ -7,14 +7,16 @@ A Combinator plugin for CakePHP 2.1 - combine, minify and cache Javascript and C
 
 This plugin basically takes the [Cake 1.3 Combinator Article from the Bakery](http://bakery.cakephp.org/articles/st3ph/2010/09/10/combinator-compress-and-combine-your-js-and-css-files), makes it compatible with CakePHP 2.1, and packages it as a plugin, including CSSTidy and jsmin.
 
-Please Note - this is my first CakePHP plugin, and also my first public GitHub project. As far as I know the code included is all legit and open source. Please let me know if not.
+The plugin is quick and easy to install. The installation instructions are somewhat long - just to provide clarity.
+
+NOTE - this is my first CakePHP plugin, and also my first public GitHub project. As far as I know the code included is all legit and open source. Please let me know if not.
 
 ## Features ##
 
-* Combine Multiple CSS files into one
-* Combine Multiple Javascript files into one
+* Combine Multiple CSS or Javascript files into one
 * Minify CSS and Javascript files
-* Select level of compression for CSS and Javascript files
+* Select level of compression
+* Caches the combined/minified file, so it's only recreated if the files included in it have changed
 
 ## Requirements ##
 
@@ -26,7 +28,7 @@ Please Note - this is my first CakePHP plugin, and also my first public GitHub p
 
     git submodule add git@github.com:joshuapaling/CakePHP-Combinator-Plugin.git app/Plugin/Combinator
 
-or download from https://github.com/joshuapaling/CakePHP-Combinator-Plugin
+or download from [https://github.com/joshuapaling/CakePHP-Combinator-Plugin](https://github.com/joshuapaling/CakePHP-Combinator-Plugin)
 	
 ### 2. Load the Plugin ###
 
@@ -40,7 +42,7 @@ or
 	
 ### 3. Add the Combinator to your Helpers array ###
 
-Add 'Combinator.Combinator' to your Helpers array in app/Controller/AppController.php (the first 'Combinator' refers to the name of the plugin, the second to the name of the helper itself - they both have the same name)
+Add 'Combinator.Combinator' to your Helpers array in app/Controller/AppController.php (the first 'Combinator' refers to the name of the plugin, the second to the name of the helper itself)
 	
 Your AppController.php might start something like this:
 	
@@ -49,9 +51,11 @@ Your AppController.php might start something like this:
 		
 ### 4. Set write permissions ###
 
-Ensure that the directories holding your Javascript and CSS are writable
+Ensure that the directories holding your Javascript and CSS files are writable.
 
 ### 5. Start Combining your CSS and Javascript files! ###
+
+Add code in your layout file (eg. app/View/Layouts/default.ctp).
 
 A minimal use might look something like this:
 
