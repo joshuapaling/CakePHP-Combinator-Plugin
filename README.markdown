@@ -55,16 +55,16 @@ Ensure that the directories holding your Javascript and CSS are writable
 
 A minimal use might look something like this:
 
-	$this->Combinator->add_libs('js', array('main','jquery.bxSlider.min','jquery.easing.1.3','jquery.cookie')); // include all your javascript files
-	$this->Combinator->add_libs('css', array('default','contact','blog','shop')); // include all your CSS files
+	$this->Combinator->add_libs('js', array('main','jquery.min','jquery.cookie')); // include main.js, jquery.min.js, jquery.cookie.js
+	$this->Combinator->add_libs('css', array('default','contact','blog')); // include default.css, contact.css, blog.css
 	
 	echo $this->Combinator->scripts('js'); // Output Javascript files
 	echo $this->Combinator->scripts('css'); // Output CSS files
 	
 However, I like to set it up as follows, so that my CSS and Javascript files are only minified and cached when I'm not in debug mode:
 
-	$cssFiles = array('default','contact','blog','shop');
-	$jsFiles = array('main','jquery.bxSlider.min','jquery.easing.1.3','jquery.backgroundpos.min','jquery.cookie','jquery.form','stickyScroll');
+	$cssFiles = array('default','contact','blog');
+	$jsFiles = array('main','jquery.min','jquery.cookie');
 
 	if(Configure::read('debug') == 2){ 
 		// Don't compress/cache css/js when we are in debug mode
@@ -80,10 +80,11 @@ However, I like to set it up as follows, so that my CSS and Javascript files are
 ## Tricks, Tips and Issues ##
 
 (These are copied from the [Cake 1.3 Combinator Article from the Bakery](http://bakery.cakephp.org/articles/st3ph/2010/09/10/combinator-compress-and-combine-your-js-and-css-files))
-*By default the files are compressed, you can change that by setting via the options of the helper.
-*By default the cached files are written to /app/webroot/js and /app/webroot/css. You can change that by setting via the options of the helper. The helper removes the / at the beginning and the end of the path specified.
-*If you get a JavaScript error with a packed version of a file it's most likely missing a semi-colon somewhere.
-*CSSTIDY seems to cause some bugs with css3 (I tried with background gradient)
+
+* By default the files are compressed, you can change that by setting via the options of the helper.
+* By default the cached files are written to /app/webroot/js and /app/webroot/css. You can change that by setting via the options of the helper. The helper removes the / at the beginning and the end of the path specified.
+* If you get a JavaScript error with a packed version of a file it's most likely missing a semi-colon somewhere.
+* CSSTIDY seems to cause some bugs with css3 (I tried with background gradient)
 
 
 ## License ##
