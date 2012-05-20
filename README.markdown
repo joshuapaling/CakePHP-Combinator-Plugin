@@ -93,4 +93,4 @@ However, I like to set it up as follows, so that my CSS and Javascript files are
 
 ## License ##
 
-The MIT License
+GPLv3 - http://www.gnu.org/licenses/gpl.html
