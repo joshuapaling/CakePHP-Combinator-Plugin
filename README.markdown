@@ -11,6 +11,8 @@ The plugin is quick and easy to install. The installation instructions are somew
 
 NOTE - this is my first CakePHP plugin, and also my first public GitHub project. As far as I know the code included is all legit and open source. Please let me know if not.
 
+ALSO NOTE - [Mark Story's AssetCompress Plugin](https://github.com/markstory/asset_compress) is far more mature and feature rich that this plugin. This plugin is simpler and requires less configuration.
+
 ## Features ##
 
 * Combine Multiple CSS or Javascript files into one
