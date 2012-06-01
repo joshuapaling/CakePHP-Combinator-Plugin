@@ -5,6 +5,7 @@ class CombinatorHelper extends Helper {
     var $inline_code = array('js' => array(), 'css' => array());
     var $basePath = null;
     var $cachePath = null;
+    var $extraPath = null;
 
     // default conf
     private $__options = array(
@@ -33,11 +34,17 @@ class CombinatorHelper extends Helper {
         $this->__options['js']['cachePath'] = $this->clean_path($this->__options['js']['cachePath']);
         $this->__options['css']['path'] = $this->clean_path($this->__options['css']['path']);
         $this->__options['css']['cachePath'] = $this->clean_path($this->__options['css']['cachePath']);
-
+                
         $this->basePath['js'] = WWW_ROOT.$this->__options['js']['path'];
         $this->cachePath['js'] = WWW_ROOT.$this->__options['js']['cachePath'];
         $this->basePath['css'] = WWW_ROOT.$this->__options['css']['path'];
         $this->cachePath['css'] = WWW_ROOT.$this->__options['css']['cachePath'];
+        
+        if(Configure::read('App.baseUrl')){
+        	$this->extraPath = 'app/webroot/'; // URL Rewrites are switched off, so wee need to add this extra path.
+        } else {
+	        $this->extraPath = ''; // .htaccess files will take care of everything
+        }
     }
 
     function scripts($type) {
@@ -80,7 +87,7 @@ class CombinatorHelper extends Helper {
 
     private function get_js_html($cachefile) {
         if(file_exists($this->cachePath['js'].'/'.$cachefile)) {
-            return '<script src="'.'/'.$this->__options['js']['cachePath'].'/'.$cachefile.'" type="text/javascript"></script>';
+            return '<script src="'.'/'.$this->extraPath.$this->__options['js']['cachePath'].'/'.$cachefile.'" type="text/javascript"></script>';
         }
         // Get the content
         $file_content = '';
@@ -106,12 +113,12 @@ class CombinatorHelper extends Helper {
             fwrite($fp, $file_content);
             fclose($fp);
         }
-        return '<script src="'.'/'.$this->__options['js']['cachePath'].'/'.$cachefile.'" type="text/javascript"></script>';
+        return '<script src="'.'/'.$this->extraPath.$this->__options['js']['cachePath'].'/'.$cachefile.'" type="text/javascript"></script>';
     }
 
     private function get_css_html($cachefile) {
         if(file_exists($this->cachePath['css'].'/'.$cachefile)) {
-            return '<link href="'.'/'.$this->__options['css']['cachePath'].'/'.$cachefile.'" rel="stylesheet" type="text/css" >';
+            return '<link href="'.'/'.$this->extraPath.$this->__options['css']['cachePath'].'/'.$cachefile.'" rel="stylesheet" type="text/css" >';
         }
         // Get the content
         $file_content = '';
@@ -141,7 +148,7 @@ class CombinatorHelper extends Helper {
             fwrite($fp, $file_content);
             fclose($fp);
         }
-        return '<link href="'.'/'.$this->__options['css']['cachePath'].'/'.$cachefile.'" rel="stylesheet" type="text/css" >';
+        return '<link href="'.'/'.$this->extraPath.$this->__options['css']['cachePath'].'/'.$cachefile.'" rel="stylesheet" type="text/css" >';
     }
 
     function add_libs($type, $libs) {
