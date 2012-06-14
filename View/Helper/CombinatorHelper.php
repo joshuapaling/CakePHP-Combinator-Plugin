@@ -17,8 +17,7 @@ class CombinatorHelper extends Helper {
                             'css' => array(
                                 'path' => '/css',
                                 'cachePath' => '/css',
-                                'enableCompression' => true,
-                                'compression' => 'highest_compression' // Can be "highest_compression", "highest_compression", "low_compression", or "default"
+                                'enableCompression' => true
                             )
                         );
 
@@ -135,15 +134,11 @@ class CombinatorHelper extends Helper {
 
         // If compression is enable, compress it !
         if($this->__options['css']['enableCompression']) {
-            App::import('Vendor', 'Combinator.csstidy', array('file' => 'csstidy'.DS.'class.csstidy.php'));
-            $tidy = new csstidy();
-            $tidy->load_template($this->__options['css']['compression']);
-            $tidy->set_cfg('sort_selectors', FALSE);
-            $tidy->set_cfg('sort_properties', FALSE);
-            $tidy->parse($file_content);
-            $file_content = $tidy->print->plain();
+            App::import('Vendor', 'Combinator.cssmin', array('file' => 'cssmin'.DS.'cssmin.php'));
+            $css_minifier = new CssMinifier($file_content); // JossToDo - here we could implement filters and plugins, as per http://code.google.com/p/cssmin/wiki/Configuration
+            $file_content = $css_minifier->getMinified();
         }
-
+        
         if($fp = fopen($this->cachePath['css'].'/'.$cachefile, 'wb')) {
             fwrite($fp, $file_content);
             fclose($fp);

@@ -5,9 +5,9 @@ A Combinator plugin for CakePHP 2.1 - combine, minify and cache Javascript and C
 ## Introduction ##
 
 
-This plugin basically takes the [Cake 1.3 Combinator Article from the Bakery](http://bakery.cakephp.org/articles/st3ph/2010/09/10/combinator-compress-and-combine-your-js-and-css-files), makes it compatible with CakePHP 2.1, and packages it as a plugin, including CSSTidy and jsmin.
+This plugin is based on [Cake 1.3 Combinator Article from the Bakery](http://bakery.cakephp.org/articles/st3ph/2010/09/10/combinator-compress-and-combine-your-js-and-css-files). I've made it compatible with CakePHP 2.1, and packaged it as a plugin. I've also upgraded the CSS compression from CSSTidy to the more recent and better maintained use [CSS Min](http://code.google.com/p/cssmin/).
 
-The plugin is quick and easy to install. The installation instructions are somewhat long - just to provide clarity.
+The plugin is quick and easy to install. The installation instructions are somewhat long - but thta's just to provide clarity.
 
 NOTE - this is my first CakePHP plugin, and also my first public GitHub project. As far as I know the code included is all legit and open source. Please let me know if not.
 
@@ -17,7 +17,6 @@ ALSO NOTE - [Mark Story's AssetCompress Plugin](https://github.com/markstory/ass
 
 * Combine Multiple CSS or Javascript files into one
 * Minify CSS and Javascript files
-* Select level of compression
 * Caches the combined/minified file, so it's only recreated if the files included in it have changed
 
 ## Requirements ##
@@ -90,8 +89,6 @@ However, I like to set it up as follows, so that my CSS and Javascript files are
 * By default the files are compressed, you can change that by setting via the options of the helper.
 * By default the cached files are written to /app/webroot/js and /app/webroot/css. You can change that by setting via the options of the helper. The helper removes the / at the beginning and the end of the path specified.
 * If you get a JavaScript error with a packed version of a file it's most likely missing a semi-colon somewhere.
-* CSSTIDY seems to cause some bugs with css3 (I tried with background gradient)
-
 
 ## License ##
 
