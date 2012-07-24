@@ -5,11 +5,11 @@ A Combinator plugin for CakePHP 2.1 - combine, minify and cache Javascript and C
 ## Introduction ##
 
 
-This plugin is based on [Cake 1.3 Combinator Article from the Bakery](http://bakery.cakephp.org/articles/st3ph/2010/09/10/combinator-compress-and-combine-your-js-and-css-files). I've made it compatible with CakePHP 2.1, and packaged it as a plugin. I've also upgraded the CSS compression from CSSTidy to the more recent and better maintained [CSS Min](http://code.google.com/p/cssmin/).
+This plugin is based on [Cake 1.3 Combinator Helper Article from the Bakery](http://bakery.cakephp.org/articles/st3ph/2010/09/10/combinator-compress-and-combine-your-js-and-css-files). I've made the code compatible with CakePHP 2.1, and packaged it as a plugin. I've also upgraded the CSS compression from CSSTidy to the more recent and better maintained [CSS Min](http://code.google.com/p/cssmin/).
 
 The plugin is quick and easy to install. The installation instructions are somewhat long - but that's just to provide clarity.
 
-NOTE - [Mark Story's AssetCompress Plugin](https://github.com/markstory/asset_compress) is far more mature and feature rich that this plugin. This plugin is simpler and requires less configuration.
+Note: [Mark Story's AssetCompress Plugin](https://github.com/markstory/asset_compress) is more mature and feature rich that this plugin. This plugin is more simple, and requires less configuration.
 
 ## Features ##
 
