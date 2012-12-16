@@ -72,7 +72,7 @@ However, I like to set it up as follows, so that my CSS and Javascript files are
 
 	$cssFiles = array('default','contact','blog');
 	$jsFiles = array('main','jquery.min','jquery.cookie');
-	$asyncJsFiles = array('main','jquery.min','jquery.cookie');
+	$asyncJsFiles = array('post-init');
 
 	if(Configure::read('debug') == 2){ 
 		// Don't compress/cache css/js when we are in debug mode
