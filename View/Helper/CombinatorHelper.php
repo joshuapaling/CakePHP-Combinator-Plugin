@@ -22,9 +22,9 @@ class CombinatorHelper extends Helper {
                         );
 
     function __construct(View $View, $options = array()) {
-    	parent::__construct($View,$options);
-    	$this->__options['js'] = !empty($options['js']) ?am($this->__options['js'], $options['js']):$this->__options['js'];
-    	
+        parent::__construct($View,$options);
+        $this->__options['js'] = !empty($options['js']) ?am($this->__options['js'], $options['js']):$this->__options['js'];
+        
         $this->__options['js'] = !empty($options['js'])?am($this->__options['js'], $options['js']):$this->__options['js'];
         $this->__options['css'] = !empty($options['css'])?am($this->__options['css'], $options['css']):$this->__options['css'];
         $this->Vue =& ClassRegistry::getObject('view');
@@ -40,23 +40,23 @@ class CombinatorHelper extends Helper {
         $this->cachePath['css'] = WWW_ROOT.$this->__options['css']['cachePath'];
         
         if(Configure::read('App.baseUrl')){
-        	$this->extraPath = 'app/webroot/'; // URL Rewrites are switched off, so wee need to add this extra path.
+            $this->extraPath = 'app/webroot/'; // URL Rewrites are switched off, so wee need to add this extra path.
         } else {
-	        $this->extraPath = ''; // .htaccess files will take care of everything
+            $this->extraPath = ''; // .htaccess files will take care of everything
         }
     }
 
-    function scripts($type) {
+    function scripts($type,$async=false) {
         switch($type) {
             case 'js':
                 $cachefile_js = $this->generate_filename('js');
-                return $this->get_js_html($cachefile_js);
+                return $this->get_js_html($cachefile_js,$async);
             case 'css':
                 $cachefile_css = $this->generate_filename('css');
                 return $this->get_css_html($cachefile_css);
             default:
                 $cachefile_js = $this->generate_filename('js');
-                $output_js = $this->get_js_html($cachefile_js);
+                $output_js = $this->get_js_html($cachefile_js,$async);
                 $cachefile_css = $this->generate_filename('css');
                 $output_css = $this->get_css_html($cachefile_css);
                 return $output_css."\n".$cachefile_js;
@@ -84,64 +84,66 @@ class CombinatorHelper extends Helper {
         return 'cache-'.$hash.'.'.$type;
     }
 
-    private function get_js_html($cachefile) {
-        if(false === file_exists($this->cachePath['js'].'/'.$cachefile)) {
-	        // Get the content
-	        $file_content = '';
-	        foreach($this->libs['js'] as $lib) {
-	            $file_content .= "\n\n".file_get_contents($this->basePath['js'].'/'.$lib);
-	        }
-	
-	        // If compression is enable, compress it !
-	        if($this->__options['js']['enableCompression']) {
-	            App::import('Vendor', 'Combinator.jsmin/jsmin');
-	            $file_content = trim(JSMin::minify($file_content));
-	        }
-	
-	        // Get inline code if exist
-	        // Do it after jsmin to preserve variable's names
-	        if(!empty($this->inline_code['js'])) {
-	            foreach($this->inline_code['js'] as $inlineJs) {
-	                $file_content .= "\n\n".$inlineJs;
-	            }
-	        }
-	
-	        if($fp = fopen($this->cachePath['js'].'/'.$cachefile, 'wb')) {
-	            fwrite($fp, $file_content);
-	            fclose($fp);
-	        }
-	}
-        return '<script src="'.$this->url('/'.$this->extraPath.$this->__options['js']['cachePath'].'/'.$cachefile).'" type="text/javascript"></script>';
+    private function get_js_html($cachefile,$async) {
+        if(file_exists($this->cachePath['js'].'/'.$cachefile)) {
+            return '<script '.($async == true ? 'async ' : '').'src="'.'/'.$this->extraPath.$this->__options['js']['cachePath'].'/'.$cachefile.'" type="text/javascript"></script>';
+        }
+        // Get the content
+        $file_content = '';
+        foreach($this->libs['js'] as $lib) {
+            $file_content .= "\n\n".file_get_contents($this->basePath['js'].'/'.$lib);
+        }
+
+        // If compression is enable, compress it !
+        if($this->__options['js']['enableCompression']) {
+            App::import('Vendor', 'Combinator.jsmin/jsmin');
+            $file_content = trim(JSMin::minify($file_content));
+        }
+
+        // Get inline code if exist
+        // Do it after jsmin to preserve variable's names
+        if(!empty($this->inline_code['js'])) {
+            foreach($this->inline_code['js'] as $inlineJs) {
+                $file_content .= "\n\n".$inlineJs;
+            }
+        }
+
+        if($fp = fopen($this->cachePath['js'].'/'.$cachefile, 'wb')) {
+            fwrite($fp, $file_content);
+            fclose($fp);
+        }
+        return '<script src="'.'/'.$this->extraPath.$this->__options['js']['cachePath'].'/'.$cachefile.'" type="text/javascript"></script>';
     }
 
     private function get_css_html($cachefile) {
-        if(false === file_exists($this->cachePath['css'].'/'.$cachefile)) {
-	        // Get the content
-	        $file_content = '';
-	        foreach($this->libs['css'] as $lib) {
-	            $file_content .= "\n\n".file_get_contents($this->basePath['css'].'/'.$lib);
-	        }
-	
-	        // Get inline code if exist
-	        if(!empty($this->inline_code['css'])) {
-	            foreach($this->inline_code['css'] as $inlineCss) {
-	                $file_content .= "\n\n".$inlineCss;
-	            }
-	        }
-	
-	        // If compression is enable, compress it !
-	        if($this->__options['css']['enableCompression']) {
-	            App::import('Vendor', 'Combinator.cssmin', array('file' => 'cssmin'.DS.'cssmin.php'));
-	            $css_minifier = new CssMinifier($file_content); // JossToDo - here we could implement filters and plugins, as per http://code.google.com/p/cssmin/wiki/Configuration
-	            $file_content = $css_minifier->getMinified();
-	        }
-	        
-	        if($fp = fopen($this->cachePath['css'].'/'.$cachefile, 'wb')) {
-	            fwrite($fp, $file_content);
-	            fclose($fp);
-	        }
-	}
-        return '<link href="'.$this->url('/'.$this->extraPath.$this->__options['css']['cachePath'].'/'.$cachefile).'" rel="stylesheet" type="text/css" >';
+        if(file_exists($this->cachePath['css'].'/'.$cachefile)) {
+            return '<link href="'.'/'.$this->extraPath.$this->__options['css']['cachePath'].'/'.$cachefile.'" rel="stylesheet" type="text/css" >';
+        }
+        // Get the content
+        $file_content = '';
+        foreach($this->libs['css'] as $lib) {
+            $file_content .= "\n\n".file_get_contents($this->basePath['css'].'/'.$lib);
+        }
+
+        // Get inline code if exist
+        if(!empty($this->inline_code['css'])) {
+            foreach($this->inline_code['css'] as $inlineCss) {
+                $file_content .= "\n\n".$inlineCss;
+            }
+        }
+
+        // If compression is enable, compress it !
+        if($this->__options['css']['enableCompression']) {
+            App::import('Vendor', 'Combinator.cssmin', array('file' => 'cssmin'.DS.'cssmin.php'));
+            $css_minifier = new CssMinifier($file_content); // JossToDo - here we could implement filters and plugins, as per http://code.google.com/p/cssmin/wiki/Configuration
+            $file_content = $css_minifier->getMinified();
+        }
+        
+        if($fp = fopen($this->cachePath['css'].'/'.$cachefile, 'wb')) {
+            fwrite($fp, $file_content);
+            fclose($fp);
+        }
+        return '<link href="'.'/'.$this->extraPath.$this->__options['css']['cachePath'].'/'.$cachefile.'" rel="stylesheet" type="text/css" >';
     }
 
     function add_libs($type, $libs) {
@@ -155,6 +157,15 @@ class CombinatorHelper extends Helper {
                 }else {
                     $this->libs[$type][] = $libs;
                 }
+                break;
+        }
+    }
+
+    function reset_lib_list($type) {
+        switch($type) {
+            case 'js':
+            case 'css':
+                $this->libs[$type] = array();
                 break;
         }
     }
