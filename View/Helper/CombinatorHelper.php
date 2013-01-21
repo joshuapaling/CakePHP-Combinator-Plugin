@@ -85,65 +85,63 @@ class CombinatorHelper extends Helper {
     }
 
     private function get_js_html($cachefile,$async) {
-        if(file_exists($this->cachePath['js'].'/'.$cachefile)) {
-            return '<script '.($async == true ? 'async ' : '').'src="'.'/'.$this->extraPath.$this->__options['js']['cachePath'].'/'.$cachefile.'" type="text/javascript"></script>';
+        if(false === file_exists($this->cachePath['js'].'/'.$cachefile)) {
+	        // Get the content
+	        $file_content = '';
+	        foreach($this->libs['js'] as $lib) {
+	            $file_content .= "\n\n".file_get_contents($this->basePath['js'].'/'.$lib);
+	        }
+	
+	        // If compression is enable, compress it !
+	        if($this->__options['js']['enableCompression']) {
+	            App::import('Vendor', 'Combinator.jsmin/jsmin');
+	            $file_content = trim(JSMin::minify($file_content));
+	        }
+	
+	        // Get inline code if exist
+	        // Do it after jsmin to preserve variable's names
+	        if(!empty($this->inline_code['js'])) {
+	            foreach($this->inline_code['js'] as $inlineJs) {
+	                $file_content .= "\n\n".$inlineJs;
+	            }
+	        }
+	
+	        if($fp = fopen($this->cachePath['js'].'/'.$cachefile, 'wb')) {
+	            fwrite($fp, $file_content);
+	            fclose($fp);
+	        }
         }
-        // Get the content
-        $file_content = '';
-        foreach($this->libs['js'] as $lib) {
-            $file_content .= "\n\n".file_get_contents($this->basePath['js'].'/'.$lib);
-        }
-
-        // If compression is enable, compress it !
-        if($this->__options['js']['enableCompression']) {
-            App::import('Vendor', 'Combinator.jsmin/jsmin');
-            $file_content = trim(JSMin::minify($file_content));
-        }
-
-        // Get inline code if exist
-        // Do it after jsmin to preserve variable's names
-        if(!empty($this->inline_code['js'])) {
-            foreach($this->inline_code['js'] as $inlineJs) {
-                $file_content .= "\n\n".$inlineJs;
-            }
-        }
-
-        if($fp = fopen($this->cachePath['js'].'/'.$cachefile, 'wb')) {
-            fwrite($fp, $file_content);
-            fclose($fp);
-        }
-        return '<script src="'.'/'.$this->extraPath.$this->__options['js']['cachePath'].'/'.$cachefile.'" type="text/javascript"></script>';
+        return '<script '.($async == true ? 'async ' : '').' src="'.$this->url('/'.$this->extraPath.$this->__options['js']['cachePath'].'/'.$cachefile).'" type="text/javascript"></script>';
     }
 
     private function get_css_html($cachefile) {
-        if(file_exists($this->cachePath['css'].'/'.$cachefile)) {
-            return '<link href="'.'/'.$this->extraPath.$this->__options['css']['cachePath'].'/'.$cachefile.'" rel="stylesheet" type="text/css" >';
+        if(false === file_exists($this->cachePath['css'].'/'.$cachefile)) {
+	        // Get the content
+	        $file_content = '';
+	        foreach($this->libs['css'] as $lib) {
+	            $file_content .= "\n\n".file_get_contents($this->basePath['css'].'/'.$lib);
+	        }
+	
+	        // Get inline code if exist
+	        if(!empty($this->inline_code['css'])) {
+	            foreach($this->inline_code['css'] as $inlineCss) {
+	                $file_content .= "\n\n".$inlineCss;
+	            }
+	        }
+	
+	        // If compression is enable, compress it !
+	        if($this->__options['css']['enableCompression']) {
+	            App::import('Vendor', 'Combinator.cssmin', array('file' => 'cssmin'.DS.'cssmin.php'));
+	            $css_minifier = new CssMinifier($file_content); // JossToDo - here we could implement filters and plugins, as per http://code.google.com/p/cssmin/wiki/Configuration
+	            $file_content = $css_minifier->getMinified();
+	        }
+	        
+	        if($fp = fopen($this->cachePath['css'].'/'.$cachefile, 'wb')) {
+	            fwrite($fp, $file_content);
+	            fclose($fp);
+	        }
         }
-        // Get the content
-        $file_content = '';
-        foreach($this->libs['css'] as $lib) {
-            $file_content .= "\n\n".file_get_contents($this->basePath['css'].'/'.$lib);
-        }
-
-        // Get inline code if exist
-        if(!empty($this->inline_code['css'])) {
-            foreach($this->inline_code['css'] as $inlineCss) {
-                $file_content .= "\n\n".$inlineCss;
-            }
-        }
-
-        // If compression is enable, compress it !
-        if($this->__options['css']['enableCompression']) {
-            App::import('Vendor', 'Combinator.cssmin', array('file' => 'cssmin'.DS.'cssmin.php'));
-            $css_minifier = new CssMinifier($file_content); // JossToDo - here we could implement filters and plugins, as per http://code.google.com/p/cssmin/wiki/Configuration
-            $file_content = $css_minifier->getMinified();
-        }
-        
-        if($fp = fopen($this->cachePath['css'].'/'.$cachefile, 'wb')) {
-            fwrite($fp, $file_content);
-            fclose($fp);
-        }
-        return '<link href="'.'/'.$this->extraPath.$this->__options['css']['cachePath'].'/'.$cachefile.'" rel="stylesheet" type="text/css" >';
+        return '<link href="'.$this->url('/'.$this->extraPath.$this->__options['css']['cachePath'].'/'.$cachefile).'" rel="stylesheet" type="text/css" >';
     }
 
     function add_libs($type, $libs) {
