@@ -1,5 +1,8 @@
 <?php 
-class CombinatorHelper extends Helper {
+/* /app/View/Helper/LinkHelper.php */
+App::uses('AppHelper', 'View/Helper');
+
+class CombinatorHelper extends AppHelper {
     var $Vue = null;
 	var $libs = array('js' => array(), 'css' => array());
 	var $inline_code = array('js' => array(), 'css' => array());
