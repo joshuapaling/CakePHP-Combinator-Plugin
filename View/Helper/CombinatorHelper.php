@@ -30,7 +30,7 @@ class CombinatorHelper extends AppHelper {
 		
 		$this->__options['js'] = !empty($options['js'])?am($this->__options['js'], $options['js']):$this->__options['js'];
 		$this->__options['css'] = !empty($options['css'])?am($this->__options['css'], $options['css']):$this->__options['css'];
-		$this->Vue =& ClassRegistry::getObject('view');
+		$this->Vue = ClassRegistry::getObject('view');
 
 		$this->__options['js']['path'] = $this->clean_path($this->__options['js']['path']);
 		$this->__options['js']['cachePath'] = $this->clean_path($this->__options['js']['cachePath']);
