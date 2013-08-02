@@ -5,6 +5,7 @@ App::uses('AppHelper', 'View/Helper');
 class CombinatorHelper extends AppHelper {
     var $Vue = null;
 	var $libs = array('js' => array(), 'css' => array());
+	var $viewLibs = array('js' => array(), 'css' => array());
 	var $inline_code = array('js' => array(), 'css' => array());
 	var $basePath = null;
 	var $cachePath = null;
@@ -52,12 +53,14 @@ class CombinatorHelper extends AppHelper {
 	function scripts($type,$async=false) {
 		switch($type) {
 			case 'js':
+				$this->libs[$type] = array_merge($this->libs[$type], $this->viewLibs[$type]);
 				$cachefile_js = $this->generate_filename('js');
 				return $this->get_js_html($cachefile_js,$async);
 			case 'css':
 				$cachefile_css = $this->generate_filename('css');
 				return $this->get_css_html($cachefile_css);
 			default:
+				$this->libs[$type] = array_merge($this->libs[$type], $this->viewLibs[$type]);
 				$cachefile_js = $this->generate_filename('js');
 				$output_js = $this->get_js_html($cachefile_js,$async);
 				$cachefile_css = $this->generate_filename('css');
@@ -153,10 +156,20 @@ class CombinatorHelper extends AppHelper {
 			case 'css':
 				if(is_array($libs)) {
 					foreach($libs as $lib) {
-						$this->libs[$type][] = $lib;
+						if($toEnd){
+			                            $this->viewLibs[$type][] = $lib;
+			                        }
+			                        else{
+			                            $this->libs[$type][] = $lib;
+			                        }
 					}
 				}else {
-					$this->libs[$type][] = $libs;
+					if($toEnd){
+		                            $this->viewLibs[$type][] = $lib;
+		                        }
+		                        else{
+		                            $this->libs[$type][] = $lib;
+		                        }
 				}
 				break;
 		}
