@@ -5,7 +5,7 @@ App::uses('AppHelper', 'View/Helper');
 class CombinatorHelper extends AppHelper {
     var $Vue = null;
 	var $libs = array('js' => array(), 'css' => array());
-	var $viewLibs = array('js' => array(), 'css' => array());
+    var $viewLibs = array('js' => array(), 'css' => array());
 	var $inline_code = array('js' => array(), 'css' => array());
 	var $basePath = null;
 	var $cachePath = null;
@@ -15,12 +15,12 @@ class CombinatorHelper extends AppHelper {
 	private $__options = array(
 							'js' => array(
 								'path' => '/js',
-								'cachePath' => '/js',
+								'cachePath' => '/cache-js',
 								'enableCompression' => true
 							),
 							'css' => array(
 								'path' => '/css',
-								'cachePath' => '/css',
+								'cachePath' => '/cache-css',
 								'enableCompression' => true
 							)
 						);
@@ -53,16 +53,18 @@ class CombinatorHelper extends AppHelper {
 	function scripts($type,$async=false) {
 		switch($type) {
 			case 'js':
-				$this->libs[$type] = array_merge($this->libs[$type], $this->viewLibs[$type]);
+                $this->libs[$type] = array_merge($this->libs[$type], $this->viewLibs[$type]);
 				$cachefile_js = $this->generate_filename('js');
 				return $this->get_js_html($cachefile_js,$async);
 			case 'css':
+                $this->libs[$type] = array_merge($this->libs[$type], $this->viewLibs[$type]);
 				$cachefile_css = $this->generate_filename('css');
 				return $this->get_css_html($cachefile_css);
 			default:
-				$this->libs[$type] = array_merge($this->libs[$type], $this->viewLibs[$type]);
+                $this->libs['js'] = array_merge($this->libs['js'], $this->viewLibs['js']);
 				$cachefile_js = $this->generate_filename('js');
 				$output_js = $this->get_js_html($cachefile_js,$async);
+                $this->libs[$type] = array_merge($this->libs[$type], $this->viewLibs[$type]);
 				$cachefile_css = $this->generate_filename('css');
 				$output_css = $this->get_css_html($cachefile_css);
 				return $output_css."\n".$cachefile_js;
@@ -127,21 +129,20 @@ class CombinatorHelper extends AppHelper {
 			foreach($this->libs['css'] as $lib) {
 				$file_content .= "\n\n".file_get_contents($this->basePath['css'].'/'.$lib);
 			}
-	
 			// Get inline code if exist
 			if(!empty($this->inline_code['css'])) {
 				foreach($this->inline_code['css'] as $inlineCss) {
 					$file_content .= "\n\n".$inlineCss;
 				}
 			}
-	
+
 			// If compression is enable, compress it !
 			if($this->__options['css']['enableCompression']) {
 				App::import('Vendor', 'Combinator.cssmin', array('file' => 'cssmin'.DS.'cssmin.php'));
 				$css_minifier = new CssMinifier($file_content); // JossToDo - here we could implement filters and plugins, as per http://code.google.com/p/cssmin/wiki/Configuration
 				$file_content = $css_minifier->getMinified();
 			}
-			
+
 			if($fp = fopen($this->cachePath['css'].'/'.$cachefile, 'wb')) {
 				fwrite($fp, $file_content);
 				fclose($fp);
@@ -150,26 +151,26 @@ class CombinatorHelper extends AppHelper {
 		return '<link href="'.$this->url('/'.$this->extraPath.$this->__options['css']['cachePath'].'/'.$cachefile).'" rel="stylesheet" type="text/css" >';
 	}
 
-	function add_libs($type, $libs) {
+	function add_libs($type, $libs,$toEnd=false) {
 		switch($type) {
 			case 'js':
 			case 'css':
 				if(is_array($libs)) {
 					foreach($libs as $lib) {
-						if($toEnd){
-			                            $this->viewLibs[$type][] = $lib;
-			                        }
-			                        else{
-			                            $this->libs[$type][] = $lib;
-			                        }
+                        if($toEnd){
+                            $this->viewLibs[$type][] = $lib;
+                        }
+                        else{
+                            $this->libs[$type][] = $lib;
+                        }
 					}
 				}else {
-					if($toEnd){
-		                            $this->viewLibs[$type][] = $lib;
-		                        }
-		                        else{
-		                            $this->libs[$type][] = $lib;
-		                        }
+                    if($toEnd){
+                        $this->viewLibs[$type][] = $libs;
+                    }
+                    else{
+                        $this->libs[$type][] = $libs;
+                    }
 				}
 				break;
 		}
