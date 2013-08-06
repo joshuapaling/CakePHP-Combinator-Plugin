@@ -74,6 +74,24 @@ You have the option to set the scripts to load asynchronously by setting the $as
 
 	echo $this->Combinator->scripts('js', true); // Output Javascript files with the async attribute
 	
+Now here if you want to append any js then you can do that by setting the $toEnd param to true
+
+	$this->Combinator->add_libs('js',array('js1','js2'),true);// append Javascript files at the end of the minified js
+
+same thing possible with css 
+
+	$this->Combinator->add_libs('css',array('css1','css2'),true);// append css files at the end of the minified css
+
+Now if you want to add any inline js or css to your minified js or minified css you can do that :
+	
+	$inlinejs =" /* your js code here */ ";
+	$this->Combinator->add_inline_code('js', $inlinejs);
+
+same with css
+
+	$inlinecss =" /* your css code here */ ";
+	$this->Combinator->add_inline_code('css', $inlinecss);
+
 However, I like to set it up as follows, so that my CSS and Javascript files are only minified and cached when I'm not in debug mode:
 
 	$cssFiles = array('default','contact','blog');
