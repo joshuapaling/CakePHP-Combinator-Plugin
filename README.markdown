@@ -6,7 +6,7 @@ A Combinator plugin for CakePHP 2.1 - combine, minify and cache Javascript and C
 
 As of now (June 2013) this plugin no longer fits in with my workflow, and I'm no longer maintaining it. The javascript compression uses [JSMin.php](https://code.google.com/p/minify/source/browse/min/lib/JSMin.php), which is old and unmaintained. I found the more javascript I wrote, the more chance I had of coming across an error with the compressed version of my code - so that wasn't cool. There's better JS compression solutions available these days.
 
-In my new (Combinator-plugin-free) workflow, I'm using [CodeKit](http://incident57.com/codekit/). It's awesome. You should try it. I'm writing SASS rather than CSS (also awesome, try it!), and among other things, CodeKit compiles, concatenates and minifies my SASS/CSS and Javascript on my local dev machine, each time I save. So, I upload it already compressed, thus removing the need for this Combinator plugin.
+If you're after a similar project that's still maintained, try [Highstrike's cakephp-compressor](https://github.com/Highstrike/cakephp-compressor).
 
 ## Introduction ##
 
@@ -16,6 +16,8 @@ This plugin is based on [Cake 1.3 Combinator Article from the Bakery](http://bak
 The plugin is quick and easy to install. The installation instructions are somewhat long - but that's just to provide clarity.
 
 NOTE - [Mark Story's AssetCompress Plugin](https://github.com/markstory/asset_compress) is far more mature and feature rich that this plugin. This plugin is simpler and requires less configuration.
+
+UPDATE - [Highstrike's cakephp-compressor](https://github.com/Highstrike/cakephp-compressor) is a simple solution, like this one, but is still maintained.
 
 ## Features ##
 
